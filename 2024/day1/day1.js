@@ -1,6 +1,6 @@
-import * as util from '../utility.js';
+import * as util from '../../utility.js';
 
-const filePath = '/day1/input.txt';
+const filePath = '/2024/day1/input.txt';
 const data = (await util.readFile(filePath))
   .map(item => item.split(/\D+/))
   .map(arr => arr.map(item => +item));

@@ -1,4 +1,4 @@
-import * as d from './day1/day1.js';
+import * as d from './2024/day1/day1.js';
 
 (async () => {
   console.log('Advent of Code, Day 1\n');
