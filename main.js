@@ -1,9 +1,7 @@
-import * as d from './2024/day1/day1.js';
+import * as d from './2024/day2/day2.js';
 
-(async () => {
-  console.log('Advent of Code, Day 1\n');
-  console.log('************************\n');
-  console.log('Part 1 Answer: ', await d.part1());
-  console.log('Part 2 Answer: ', await d.part2());
-  console.log('\n************************\n');
-})();
+console.log('Advent of Code, Day 2\n');
+console.log('************************\n');
+console.log('Part 1 Answer: ', await d.part1());
+console.log('Part 2 Answer: ', await d.part2());
+console.log('\n************************\n');

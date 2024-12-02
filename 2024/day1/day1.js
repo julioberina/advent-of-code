@@ -5,7 +5,7 @@ const data = (await util.readFile(filePath))
   .map(item => item.split(/\D+/))
   .map(arr => arr.map(item => +item));
 
-export const part1 = async () => {
+export const part1 = () => {
   const list1 = data.map(item => item[0]).sort((a, b) => a - b);
   const list2 = data.map(item => item[1]).sort((a, b) => a - b);
 
@@ -18,7 +18,7 @@ export const part1 = async () => {
   return totalDistance;
 }
 
-export const part2 = async () => {
+export const part2 = () => {
   const tally = {};
   const list1 = data.map(item => item[0]);
   const list2 = data.map(item => item[1]);
