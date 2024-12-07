@@ -28,23 +28,16 @@ const lookaheadItem = (i, j, dir) => {
   return null; // null is out of bounds
 }
 
-const moveGuardAndReturnNewPos = (i, j, dir) => {
-  const guard = data[i][j];
-
-  if (dir === 0) {
-    return [i-1, j];
-  } else if (dir === 90) {
-    return [i, j+1];
-  } else if (dir === 180) {
-    return [i+1, j];
-  } else if (dir === 270) {
-    return [i, j-1];
-  }
+const returnNewGuardPosAfterMove = (i, j, dir) => {
+  if (dir === 0) { return [i-1, j]; }
+  else if (dir === 90) { return [i, j+1]; }
+  else if (dir === 180) { return [i+1, j]; }
+  else if (dir === 270) { return [i, j-1]; }
 
   return null;
 }
 
-const rotateGuard90Degrees = (i, j, dir) => {
+const rotateGuard90Degrees = (dir) => {
   return (dir + 90) % 360;
 }
 
@@ -56,9 +49,9 @@ const getDistinctSpots = (i, j) => {
   while (lookaheadItem(r, c, dir)) {
     const lookItem = lookaheadItem(r, c, dir);
 
-    if (lookItem === '#') { dir = rotateGuard90Degrees(r, c, dir); }
+    if (lookItem === '#') { dir = rotateGuard90Degrees(dir); }
     else {
-      [r, c] = moveGuardAndReturnNewPos(r, c, dir);
+      [r, c] = returnNewGuardPosAfterMove(r, c, dir);
       visited.add(`${r},${c}`);
     }
   }
@@ -80,9 +73,9 @@ const getLoopsCount = (i, j) => {
       if (walls.has(spotAndDir)) { return 1; }
       
       walls.add(spotAndDir);
-      dir = rotateGuard90Degrees(r, c, dir);
+      dir = rotateGuard90Degrees(dir);
     }
-    else { [r, c] = moveGuardAndReturnNewPos(r, c, dir); }
+    else { [r, c] = returnNewGuardPosAfterMove(r, c, dir); }
   }
 
   return 0;
