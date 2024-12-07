@@ -5,6 +5,7 @@ const data = (await util.readFile(filePath))
   .map(row => row.split(''));
 const rowCount = data.length;
 const colCount = data[0].length;
+const emptySpotsGuardFirst = [];
 
 /*
   Dir (direction) values:
@@ -29,19 +30,14 @@ const lookaheadItem = (i, j, dir) => {
 
 const moveGuardAndReturnNewPos = (i, j, dir) => {
   const guard = data[i][j];
-  data[i][j] = 'X';
 
   if (dir === 0) {
-    data[i-1][j] = guard;
     return [i-1, j];
   } else if (dir === 90) {
-    data[i][j+1] = guard;
     return [i, j+1];
   } else if (dir === 180) {
-    data[i+1][j] = guard;
     return [i+1, j];
   } else if (dir === 270) {
-    data[i][j-1] = guard;
     return [i, j-1];
   }
 
@@ -49,39 +45,13 @@ const moveGuardAndReturnNewPos = (i, j, dir) => {
 }
 
 const rotateGuard90Degrees = (i, j, dir) => {
-  if (dir === 0) {
-    data[i][j] = '>';
-  } else if (dir === 90) {
-    data[i][j] = 'v';
-  } else if (dir === 180) {
-    data[i][j] = '<';
-  } else if (dir === 270) {
-    data[i][j] = '^';
-  }
-
   return (dir + 90) % 360;
-}
-
-const getGuardDir = (i, j) => {
-  const guard = data[i][j];
-
-  if (guard === '^') {
-    return 0;
-  } else if (guard === '>') {
-    return 90;
-  } else if (guard === 'v') {
-    return 180;
-  } else if (guard === '<') {
-    return 270;
-  }
-
-  return null;
 }
 
 const getDistinctSpots = (i, j) => {
   const visited = new Set([`${i},${j}`]);
   let r = i, c = j;
-  let dir = getGuardDir(r, c);
+  let dir = 0;
 
   while (lookaheadItem(r, c, dir)) {
     const lookItem = lookaheadItem(r, c, dir);
@@ -96,15 +66,56 @@ const getDistinctSpots = (i, j) => {
   return visited.size;
 }
 
+const getLoopsCount = (i, j) => {
+  const walls = new Set();
+  let r = i, c = j;
+  let dir = 0;
+
+  while (lookaheadItem(r, c, dir)) {
+    const lookItem = lookaheadItem(r, c, dir);
+
+    if (lookItem === '#') {
+      const spotAndDir = `${r},${c},${dir}`;
+      
+      if (walls.has(spotAndDir)) { return 1; }
+      
+      walls.add(spotAndDir);
+      dir = rotateGuard90Degrees(r, c, dir);
+    }
+    else { [r, c] = moveGuardAndReturnNewPos(r, c, dir); }
+  }
+
+  return 0;
+}
+
 export const part1 = () => {
+  let distinctSpots = 0;
+
   for (let i = 0; i < rowCount; ++i) {
     for (let j = 0; j < colCount; ++j) {
       const item = data[i][j];
-      if (item !== '.' && item !== '#') { return getDistinctSpots(i, j); }
+
+      if (item === '.') { emptySpotsGuardFirst.push([i, j]); }
+      else if (item !== '#') {
+        emptySpotsGuardFirst.unshift([i, j]); // Empty spots first with guard spot (i, j) as the first item
+        distinctSpots = getDistinctSpots(i, j);
+      }
     }
   }
+
+  return distinctSpots;
 }
 
 export const part2 = () => {
-  return 'Part 2';
+  let loopsAfterAddedWall = 0;
+  const [gi, gj] = emptySpotsGuardFirst.shift();
+
+  for (const emptySpot of emptySpotsGuardFirst) {
+    const [i, j] = emptySpot;
+    data[i][j] = '#';
+    loopsAfterAddedWall += getLoopsCount(gi, gj);
+    data[i][j] = '.';
+  }
+
+  return loopsAfterAddedWall;
 }
