@@ -5,7 +5,7 @@ const data = (await util.readFile(filePath))
   .map(line => line.split(''));
 const rowCount = data.length;
 const colCount = data[0].length;
-const antinodeSpots = {};
+const antennas = {};
 
 const isSpotInBounds = (i, j) => {
   return (i >= 0 && i < rowCount && j >= 0 && j < colCount);
@@ -23,20 +23,20 @@ export const part1 = () => {
       if (data[i][j] === '.') { continue; }
 
       const char = data[i][j];
-      if (!antinodeSpots[char]) { antinodeSpots[char] = [[i, j]]; }
-      else { antinodeSpots[char].push([i, j]); }
+      if (!antennas[char]) { antennas[char] = [[i, j]]; }
+      else { antennas[char].push([i, j]); }
     }
   }
 
-  for (const antinode of Object.keys(antinodeSpots)) {
-    const an = antinodeSpots[antinode].length;
+  for (const antinode of Object.keys(antennas)) {
+    const an = antennas[antinode].length;
 
     for (let i = 0; i < an; ++i) {
-      const x = antinodeSpots[antinode][i];
+      const x = antennas[antinode][i];
 
       for (let j = 0; j < an; ++j) {
         if (i === j) { continue; }
-        const y = antinodeSpots[antinode][j];
+        const y = antennas[antinode][j];
 
         if (isWithinOne(x[0], x[1], y[0], y[1])) { continue; }
 
@@ -55,16 +55,16 @@ export const part1 = () => {
 export const part2 = () => {
   const uniqueAntinodeLocations = new Set();
 
-  for (const antinode of Object.keys(antinodeSpots)) {
-    const an = antinodeSpots[antinode].length;
+  for (const antinode of Object.keys(antennas)) {
+    const an = antennas[antinode].length;
 
     for (let i = 0; i < an; ++i) {
-      const x = antinodeSpots[antinode][i];
+      const x = antennas[antinode][i];
       uniqueAntinodeLocations.add(`${x[0]},${x[1]}`);
 
       for (let j = 0; j < an; ++j) {
         if (i === j) { continue; }
-        const y = antinodeSpots[antinode][j];
+        const y = antennas[antinode][j];
         uniqueAntinodeLocations.add(`${y[0]},${y[1]}`);
 
         const [dx, dy] = [y[0] - x[0], y[1] - x[1]];
