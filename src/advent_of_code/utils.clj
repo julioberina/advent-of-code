@@ -7,3 +7,7 @@
 
 (defn str-list-to-int [strlist]
   (str-to-int (s/join #"" strlist)))
+
+;; Factors of number up to 1/2 (inclusive)
+(defn factors [n]
+  (filter #(zero? (rem n %)) (range 1 (inc (quot n 2)))))
