@@ -36,19 +36,18 @@
 
     @invalid))
 
-(defn part-1 [data]
+(defn sum-up-invalid-ids [data invalid-id-fn]
   (->> data
        (map spread-range)
        flatten
-       (filter invalid-id?)
+       (filter invalid-id-fn)
        (reduce +')))
 
+(defn part-1 [data]
+  (sum-up-invalid-ids data invalid-id?))
+
 (defn part-2 [data]
-  (->> data
-       (map spread-range)
-       flatten
-       (filter deep-invalid-id?)
-       (reduce +')))
+  (sum-up-invalid-ids data deep-invalid-id?))
 
 
 (defn solve []
