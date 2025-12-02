@@ -49,7 +49,6 @@
 (defn part-2 [data]
   (sum-up-invalid-ids data deep-invalid-id?))
 
-
 (defn solve []
   (let [data (s/split input #",")]
     (println "Part 1:" (part-1 data))
